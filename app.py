@@ -13,6 +13,8 @@ socketio = SocketIO(app, manage_session=False)
 def index():
     return render_template('index.html')
 
+@app.route('/hi')
+def hi(): return "<h1 style='font-family:comic sans, comic sans ms'>Twalle oo baba!</h1>"
 
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():
