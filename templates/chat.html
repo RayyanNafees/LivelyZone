@@ -28,22 +28,25 @@
                 $('#chat').scrollTop($('#chat')[0].scrollHeight);
             });
 
-            $('#send').click(function(e) {
+            function send(e) {
                 text = $('#text').val();
                 socket.emit('text', {
                     msg: text
                 });
                 $('#text').val('');
-            });
-        });
+            }
 
-        function leave_room() {
-            socket.emit('left', {}, function() {
-                socket.disconnect();
-                // go back to the login page
-                window.location.href = "{{ url_for('index') }}";
-            });
-        }
+            $('#send').click(send);
+
+
+            function leave_room() {
+                socket.emit('left', {}, function() {
+                    socket.disconnect();
+                    // go back to the login page
+                    window.location.href = "{{ url_for('index') }}";
+                });
+            }
+        });
     </script>
 </head>
 
@@ -57,6 +60,13 @@
         <button type="button" id="send" class="btn btn-success">SEND</button><br /><br />
         <center><button type="button" class="btn btn-danger" onclick=leave_room()>Leave this Chat</button></center>
     </div>
+
+    <script>
+        document.getElementById('text').onkeydown = function(e) {
+            if (e.which === 13)
+                send(e);
+        }
+    </script>
 </body>
 
 </html>
