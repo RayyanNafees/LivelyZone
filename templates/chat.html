@@ -133,6 +133,12 @@
             border-radius: 100%;
             background: green;
         }
+        
+        .usr {
+            font-size: xx-small;
+            color: white;
+            margin: 0px;
+        }
     </style>
 </head>
 
@@ -158,22 +164,23 @@
 
     <script>
         var socket;
-        var personal;
         $(function() {
-            let _msg;
+            let newmsg = true;
             main = $('main');
             socket = io.connect('https://' + document.domain + ':' + location.port + '/chat');
             socket.on('connect', () => socket.emit('join', {}));
-            personal = true;
             socket.on('status', function(data) {
                 main.append('<center><p class="status">' + data.msg + '</p></center><br>');
                 main.scrollTop(main[0].scrollHeight);
             });
 
             socket.on('message', function(data) {
-                if (data.msg.split(':')[1].trimLeft == _msg) return;
-                main.append($('<br><br><p class = "received">' + data.msg.replace(/\n/g, '<br>') + '</p>'));
-                main.scrollTop(main[0].scrollHeight);
+                if (data.user != localStorage.user) {
+                    usr = newmsg ? '<div class="usr">' + data.user + '</div><br>' : '';
+                    main.append($('<br><br><p class = "received">' + usr + data.msg.replace(/\n/g, '<br>') + '</p>'));
+                    main.scrollTop(main[0].scrollHeight);
+
+                }
 
             });
 
@@ -187,8 +194,6 @@
                 txt.attr('rows', '1');
                 main.append($('<br><br><p class = "sent">' + text.replace(/\n/g, '<br>') + '</p>'));
                 main.scrollTop(main[0].scrollHeight);
-                personal = true;
-                _msg = text;
             }
 
 
