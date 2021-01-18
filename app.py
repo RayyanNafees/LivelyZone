@@ -45,7 +45,7 @@ def join(message):
 @socketio.on('text', namespace='/chat')
 def text(message):
     room = session.get('room')
-    emit('message', {'msg': session.get('username') + ' : ' + message['msg']}, room=room)
+    emit('message', {'msg': message['msg'], 'user':session.get('username')}, room=room)
 
 
 @socketio.on('left', namespace='/chat')
