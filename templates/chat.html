@@ -171,7 +171,7 @@
             });
 
             socket.on('message', function(data) {
-                if (data.msg.split(':').slice(1) == _msg) return;
+                if (data.msg.split(':')[1].trimLeft == _msg) return;
                 main.append($('<br><br><p class = "received">' + data.msg.replace(/\n/g, '<br>') + '</p>'));
                 main.scrollTop(main[0].scrollHeight);
 
