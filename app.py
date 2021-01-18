@@ -61,4 +61,4 @@ if __name__ == '__main__':
     socketio.run(app, port=9999) 
 
     import webbrowser
-    webbrowser.open('http://127.0.0.1:9999/')
+    webbrowser.open('https://127.0.0.1:9999/')

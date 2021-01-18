@@ -1,71 +1,219 @@
-<!DOCTYPE html>
-<html lang='en'>
+<!doctype html>
+<html lang="en">
 
 <head>
-    <title>LIVELYZONE</title>
+    <title>Chat Box</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="../static/libs/font-awesome/css/all.css">
+    <link rel="stylesheet" href="../static/libs/font-awesome/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
 
-    <meta charset="UTF-8">
-
-    <link rel="stylesheet" href="../static/libs/bootstrap/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="../static/style.css" />
-
-    <script src="../static/libs/jquery.js"></script>
+    <script src='../static/libs/jquery.js'></script>
     <script src="../static/libs/socket.io.min.js"></script>
+
+    <style>
+        @font-face {
+            src: url(../static/libs/Poppins.ttf);
+            font-family: 'Poppins';
+        }
+        
+        * {
+            font-family: 'Poppins';
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            position: static;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: seagreen;
+            color: white;
+            padding: 10px;
+            z-index: 1;
+            text-align: center;
+        }
+        /* Main */
+        
+        main {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            display: block;
+            background: antiquewhite;
+            color: black;
+        }
+        
+        p,
+        div {
+            margin: 5px;
+            position: static;
+            border-radius: 10px;
+            width: max-content;
+        }
+        
+        .sent {
+            background: deepskyblue;
+            color: black;
+            text-align: right;
+            right: 0;
+            max-width: 40%;
+            word-wrap: break-word;
+            padding: 5px;
+            height: auto;
+            position: absolute;
+            border-bottom-right-radius: 3px;
+        }
+        
+        .received {
+            background: skyblue;
+            color: black;
+            text-align: left;
+            left: 0;
+            max-width: 40%;
+            word-wrap: break-word;
+            padding: 5px;
+            border-bottom-left-radius: 3px;
+        }
+        
+        .status {
+            text-align: center;
+            font-size: smaller;
+            font-weight: lighter;
+            width: max-content;
+            max-width: 90%;
+            height: auto;
+            background: skyblue;
+            color: black;
+            padding: 5px;
+            opacity: 0.5;
+            z-index: -5;
+        }
+        /* footer */
+        
+        footer {
+            position: fixed;
+            bottom: 40px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            display: ruby;
+            z-index: 1;
+        }
+        
+        #text {
+            padding: 7px;
+            width: 80%;
+            border: 0;
+            border-radius: 20px;
+            resize: none;
+            box-shadow: 0 0 5px 5px silver;
+            word-wrap: break-word;
+            overflow-y: scroll;
+            position: absolute;
+            bottom: -30px;
+        }
+        
+        #send {
+            position: absolute;
+            right: 1px;
+            bottom: -30px;
+            height: 45px;
+            width: 45px;
+            border: none;
+            border-radius: 100%;
+            background: green;
+        }
+    </style>
+</head>
+
+<body>
+    <header>{{session['room']}}</header>
+
+    <main>
+
+    </main>
+
+    <footer>
+        <div>
+            <span id="emojis"><i class=""></i></span>
+            <textarea rows='1' placeholder="Type your message" id="text"></textarea>
+        </div>
+        <button id="send" onclick="send()"><i class="fa fa-send-o"></i></button>
+    </footer>
+
+    <!-- 
+    <div hidden>
+        <input type="file" name="attch" id="file">
+    </div> -->
 
     <script>
         var socket;
         $(function() {
+            main = $('main');
             socket = io.connect('https://' + document.domain + ':' + location.port + '/chat');
             socket.on('connect', () => socket.emit('join', {}));
 
             socket.on('status', function(data) {
-                $('#chat').val($('#chat').val() + '<' + data.msg + '>\n');
-                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+                main.append('<center><p class="status">' + data.msg + '</p></center><br>');
+                main.scrollTop(main[0].scrollHeight);
             });
 
             socket.on('message', function(data) {
-                $('#chat').val($('#chat').val() + data.msg + '\n');
-                $('#chat').scrollTop($('#chat')[0].scrollHeight);
+                main.scrollTop(main[0].scrollHeight);
             });
 
-            function send(e) {
-                text = $('#text').val();
+            function send() {
+                let txt = $('#text');
+                let text = txt.val();
                 socket.emit('text', {
                     msg: text
                 });
-                $('#text').val('');
+                txt.val('');
+                txt.attr('rows', '1');
+                main.append($('<br><br><p class = "sent">' + text.replace(/\n/g, '<br>') + '</p>'));
             }
 
-            $('#send').click(send);
 
+            shift = false;
 
-            function leave_room() {
+            $('#text').keydown(function(e) {
+                if (e.which == 13) {
+                    //e.preventDefault();
+                    //send();
+                    r = Number(this.rows);
+                    if (r < 4)
+                        this.rows = String(++this.rows);
+
+                    if (e.shiftKey) {
+                        e.preventDefault();
+                        send();
+                    }
+
+                }
+                if (e.which == 9) {
+                    e.preventDefault();
+                    this.value += '    ';
+                }
+            });
+
+            window.onbeforeunload = function leave_room() {
                 socket.emit('left', {}, function() {
                     socket.disconnect();
                     // go back to the login page
-                    window.location.href = "{{ url_for('index') }}";
+                    window.location.href = "/";
                 });
             }
         });
-    </script>
-</head>
-
-<body class="text-center">
-
-    <div class="chatwindow">
-        <h2>Code Cube Chat</h2>
-        <h2>Room : {{session['room']}}</h2><br>
-        <textarea id="chat" cols="70" rows="10" placeholder="No messages yet. Start one..."></textarea><br /><br />
-        <input type="text" id="text" size="60" placeholder="Enter your message here" />
-        <button type="button" id="send" class="btn btn-success">SEND</button><br /><br />
-        <center><button type="button" class="btn btn-danger" onclick=leave_room()>Leave this Chat</button></center>
-    </div>
-
-    <script>
-        document.getElementById('text').onkeydown = function(e) {
-            if (e.which === 13)
-                send(e);
-        }
     </script>
 </body>
 
