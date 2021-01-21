@@ -1,54 +1,60 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_socketio import SocketIO, join_room, leave_room, emit
- 
 app = Flask(__name__)
 app.debug = True
 app.config['SECRET_KEY'] = 'secret'
 app.config['SESSION_TYPE'] = 'filesystem'
 
-socketio = SocketIO(app, manage_session=False)
-
+socket = SocketIO(app, manage_session=False)
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/hi')
-def hi(): return "<h1 style='font-family:comic sans, comic sans ms'>Twalle oo baba!</h1>"
+
+@app.route('/join/<user>/<room>')
+def link(user, room):
+    session['username'] = user
+    session['room'] = room
+    return redirect('/chat')
+    
+
 
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():
-    if request.method=='POST':
-        username = request.form['username']
-        room = request.form['room']
-        
+    if request.method=='POST':  
         #Store the data in session
-        session['username'] = username
-        session['room'] = room
+        session['username'] = request.form['username']
+        session['room'] = request.form['room']
         
-        return render_template('chat.html', session = session)
+        return render_template('chat.html', session = session,
+                               protcl  = 'http' if __name__=='__main__' else 'https',)
     
-    else:
-        if session.get('username') is not None:
-            return render_template('chat.html', session = session)
-        else:
-            return redirect('/')
+    elif request.method=='GET':
+        
+        if 'username' not in session: return redirect('/')
 
+        else: return render_template('chat.html',
+                                    session = session,
+                                    protcl  = 'http' if __name__=='__main__' else 'https',
+                                    )
+    
 
-@socketio.on('join', namespace='/chat')
+@socket.on('join', namespace='/chat')
 def join(message):
     room = session.get('room')
     join_room(room)
     emit('status', {'msg':  session.get('username') + ' has entered the room.'}, room=room)
 
 
-@socketio.on('text', namespace='/chat')
+@socket.on('text', namespace='/chat')
 def text(message):
     room = session.get('room')
-    emit('message', {'msg': message['msg'], 'user':session.get('username')}, room=room)
+    text = message['msg'].replace('\n','<br>')
+    emit('message', {'msg': text, 'user':session.get('username')}, room=room)
 
 
-@socketio.on('left', namespace='/chat')
+@socket.on('left', namespace='/chat')
 def left(message):
     room = session.get('room')
     username = session.get('username')
@@ -58,7 +64,7 @@ def left(message):
 
 
 if __name__ == '__main__':
-    socketio.run(app, port=9999) 
+    socket.run(app, debug=True, port=9999) 
 
     import webbrowser
     webbrowser.open('https://127.0.0.1:9999/')

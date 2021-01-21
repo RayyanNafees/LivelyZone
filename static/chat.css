@@ -1,0 +1,133 @@
+@font-face {
+    src: url(../static/libs/Poppins.ttf);
+    font-family: 'Poppins';
+}
+
+* {
+    font-family: 'Poppins';
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    position: static;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: seagreen;
+    color: white;
+    padding: 10px;
+    z-index: 1;
+    text-align: center;
+}
+
+
+/* Main */
+
+main {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    display: block;
+    background: antiquewhite;
+    color: black;
+}
+
+p,
+div {
+    margin: 5px;
+    position: static;
+    border-radius: 10px;
+    width: max-content;
+}
+
+.sent {
+    background: deepskyblue;
+    color: black;
+    text-align: right;
+    align-self: flex-end;
+    align-content: flex-end;
+    right: 0;
+    max-width: 40%;
+    word-wrap: break-word;
+    padding: 5px;
+    height: auto;
+    position: absolute;
+    border-bottom-right-radius: 3px;
+}
+
+.received {
+    background: skyblue;
+    color: black;
+    text-align: left;
+    align-self: flex-start;
+    align-content: flex-start;
+    word-wrap: break-word;
+    padding: 5px;
+    height: auto;
+    border-bottom-left-radius: 3px;
+}
+
+.status {
+    text-align: center;
+    font-size: smaller;
+    font-weight: lighter;
+    width: max-content;
+    max-width: 90%;
+    height: auto;
+    background: skyblue;
+    color: black;
+    padding: 5px;
+    opacity: 0.5;
+    z-index: -5;
+}
+
+
+/* footer */
+
+footer {
+    position: absolute;
+    bottom: 40px;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    display: flex;
+    z-index: 1;
+}
+
+#text {
+    padding: 7px;
+    width: 80%;
+    border: 0;
+    border-radius: 20px;
+    resize: none;
+    box-shadow: 0 0 5px 5px silver;
+    word-wrap: break-word;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    position: absolute;
+    bottom: 0;
+}
+
+#send {
+    position: absolute;
+    right: 1px;
+    bottom: -30px;
+    height: 45px;
+    width: 45px;
+    border: none;
+    border-radius: 100%;
+    background: green;
+}
+
+.usr {
+    font-size: xx-small;
+    color: white;
+    margin: 0px;
+}
