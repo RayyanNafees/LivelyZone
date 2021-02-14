@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'Local';
-    src: url(Product.ttf);
+    src: url(../static/libs/fonts/Product.ttf);
 }
 
 :root {
@@ -31,11 +31,11 @@ body {
     width: 100vw;
     display: flex;
     flex-direction: column;
-    align-items:center;
+    align-items: center;
     align-content: center;
 }
 
-.container {
+main#messages {
     background: white;
     margin: auto;
     height: 85vh;
@@ -45,30 +45,28 @@ body {
     overflow-x: hidden;
 }
 
-.header {
+header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 50px;
     z-index: 2;
-    background: var(--subbg);                                           
+    background: var(--subbg);
     box-shadow: 0px 4px 24px var(--bgcol);
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-
-
-.notify {
+.status {
     padding: 5px;
     font-size: 16px;
     color: var(--col);
     width: 100%;
     margin: 10px;
     text-align: center;
-} 
+}
 
 .sent {
     position: static;
@@ -76,21 +74,17 @@ body {
     text-align: center;
     word-break: break-word;
     overflow: hidden;
-
     margin-top: 8px;
     margin-bottom: 8px;
     margin-right: 3px;
     margin-left: auto;
-
     padding: 10px;
     border-top-left-radius: 10px;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
-
     background: #306bf3;
     color: white;
     text-align: left;
-
     max-width: 70%;
     width: max-content;
 }
@@ -100,27 +94,21 @@ body {
     left: 0;
     text-align: left;
     overflow: hidden;
-
     margin-right: auto;
     margin-left: 3px;
     margin-top: 8px;
     margin-bottom: 8px;
-
     padding: 10px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
-
-
-
     background: #dae1f5;
     color: var(--col);
-    
     max-width: 70%;
     width: max-content;
 }
 
-.footer {
+footer {
     position: fixed;
     bottom: 0;
     left: 0;
