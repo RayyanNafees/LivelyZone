@@ -1,3 +1,11 @@
+// DOM Selector Function.
+let DOM = el => document.querySelector(el);
+
+//VARIABLES.
+let dark_mode = localStorage.getItem("darkmode");
+let theme_toggler = DOM(".toggle-theme");
+
+
 //
 
 let count = (char, str) => [...str].filter(i => i == char).length;
@@ -11,64 +19,43 @@ let stat = 'Ming Chat';
 socket.on('connect', () => socket.emit('join', {}));
 
 socket.on('status', function(data) {
-    base.before('<center><p class="status">' + data.msg + '</p></center><br>');
+    msgwin.append('<p class="status">' + data.msg + '</p>');
     msgwin.scrollTop(msgwin[0].scrollHeight);
 });
 
 
 socket.on('message', function(data) {
 
-    msg = data.msg.replace(/\n/g, '<br>')
+    let msg = data.msg.replace(/\n/g, '<br>');
 
     if (data.user != localStorage.user) {
-        // main.append(`<br><p class="received"><span class="usr">${data.user}</span></br>${data.msg}</p><br>`);
 
-        botImg = $('#logo').clone(); // create <img>
-        botImg.addClass('botimg');
+        msgbox = $(`<p class="received">${msg}</p>`);
 
-        msgbox = $(`<p align="left" class="received"></p>`); // create the botbox
+        if (document.hidden)
+            new Notification(data.user, { body: data.msg });
 
-        msgbox.prepend(botImg);
-        msgbox.append(msg);
-
-        if (document.hidden) {
-            stat = data.user + 'messaged';
-            new Notification(data.user, { body: data.msg, icon: botimg.attr('src') });
-        }
     } else
-        msgbox = $('<p align="right" class="sent">' + msg + '</p>');
+        msgbox = $(`<p class="sent">${msg}</p>`);
 
 
-    base.before(msgbox); // add it to msg element
+    msgwin.append(msgbox); // add it to msg element
     msgwin.scrollTop(msgwin[0].scrollHeight * 2);
-
-    UI();
 });
 
 
-window.onbeforeunload = function leave_room() {
+function leave_room() {
     socket.emit('left', {}, function() {
         socket.disconnect();
         location.href = "/"; // redirect('/')
     });
-};
-
-
-document.onvisibilitychange = function() {
-    // To be editted as like fb (flickering document.title)
-};
-
-
-function UI() {
-    p = document.querySelectorAll('p.sent, p.received');
-    for (let _p of p) {
-
-        if (_p.class == 'sent')
-            _p.style.marginRight = (window.innerWidth - $(_p).width() - 20) + 'px';
-        else
-            _p.style.marginLeft = (window.innerWidth - $(_p).width() - 20) + 'px';
-    }
 }
+
+window.onbeforeunload = leave_room;
+$('header h3')[0].onclick = leave_room;
+
+
+// document.onvisibilitychange = function() {};
 
 /*______________ jQuery methods ________*/
 
@@ -150,7 +137,6 @@ $(function() {
             socket.emit('attach', { 'file': form }, () => alert('sent successfuly'));
         }
     });
-
 });
 
 

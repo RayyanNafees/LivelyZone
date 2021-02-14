@@ -122,3 +122,28 @@ footer {
     align-items: center;
     padding: 10px;
 }
+
+#send,
+#arrows,
+#plus {
+    font-size: 32px;
+    margin: 5px;
+    color: white;
+}
+
+#send:hover,
+#arrows:hover,
+#plus:hover {
+    color: #0E75E6;
+}
+
+textarea {
+    padding: 10px;
+    outline: 0;
+    border: none;
+    border-radius: 20px;
+    width: 70%;
+    height: max-content;
+    margin-bottom: 5px;
+    resize: none;
+}
