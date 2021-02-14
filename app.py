@@ -60,7 +60,7 @@ def chat():
 
 @socket.on('join', namespace='/chat')
 def join(message):
-    room = session.get('room', 'Ming')
+    room = session.get('room', 'Lively Zone')
     user =  session.get('username', 'Someone') 
     join_room(room)
     emit('status', {'msg': user + ' joined the room.'}, room=room)

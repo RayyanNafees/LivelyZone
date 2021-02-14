@@ -35,16 +35,6 @@ body {
     align-content: center;
 }
 
-main#messages {
-    background: white;
-    margin: auto;
-    height: 85vh;
-    width: 95vw;
-    border-radius: 4px;
-    margin-top: 53px;
-    overflow-x: hidden;
-}
-
 header {
     position: fixed;
     top: 0;
@@ -59,9 +49,48 @@ header {
     align-items: center;
 }
 
+main#messages {
+    background: white;
+    margin: auto;
+    height: 85vh;
+    width: 95vw;
+    border-radius: 4px;
+    margin-top: 53px;
+    overflow-x: hidden;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 40px;
+    z-index: 2;
+    background: var(--subbg);
+    box-shadow: 0px 4px 24px var(--bgcol);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+textarea {
+    padding: 10px;
+    outline: 0;
+    border: none;
+    border-radius: 20px;
+    width: 70%;
+    height: max-content;
+    margin-bottom: 5px;
+    resize: none;
+}
+
+
+/* Messages */
+
 .status {
     padding: 5px;
-    font-size: 16px;
+    font-size: 10px;
     color: var(--col);
     width: 100%;
     margin: 10px;
@@ -108,20 +137,8 @@ header {
     width: max-content;
 }
 
-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    height: 40px;
-    z-index: 2;
-    background: var(--subbg);
-    box-shadow: 0px 4px 24px var(--bgcol);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-}
+
+/* Icon/buttons */
 
 #send,
 #arrows,
@@ -135,15 +152,4 @@ footer {
 #arrows:hover,
 #plus:hover {
     color: #0E75E6;
-}
-
-textarea {
-    padding: 10px;
-    outline: 0;
-    border: none;
-    border-radius: 20px;
-    width: 70%;
-    height: max-content;
-    margin-bottom: 5px;
-    resize: none;
 }
