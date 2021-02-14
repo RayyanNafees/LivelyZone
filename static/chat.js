@@ -14,7 +14,7 @@ let getcss = (query, style) => getComputedStyle(document.querySelector(query)).g
 
 let msgwin = $('#messages'); // get msg window
 let base = $('#base');
-let stat = 'Ming Chat';
+let stat = 'Lively Zone Chat';
 
 socket.on('connect', () => socket.emit('join', {}));
 

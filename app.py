@@ -29,7 +29,7 @@ def foo(room):
 
 @app.route('/add')  # add?user=Rayyan&room=Room
 def enter():
-    room = request.args.get('room','Ming')
+    room = request.args.get('room','Lively Zone')
     user = request.args.get('user','Someone')
     return redirect(f'/join/{user}/{room}')
 
@@ -37,7 +37,7 @@ def enter():
 @app.route('/join/<user>/<room>')
 def link(user, room):
     session['username'] = user or 'Someone'
-    session['room'] = room or 'Ming'
+    session['room'] = room or 'Lively Zone'
     return redirect('/chat')
 
 
