@@ -1,57 +1,106 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 
 <head>
-    <title>Lively Zone</title>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Ming Chat</title>
 
-    <!-- fa5 -->
-    <link rel="stylesheet" href="../static/libs/font-awesome/css/all.css">
-    <!-- <link rel="stylesheet" href="../static/libs/font-awesome/css/all.min.css"> -->
-    <!-- 
-        <link 
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"
-        integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
-        crossorigin="anonymous"
-        />
-        -->
-    <!---->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme" content="#191970" />
 
-    <link rel="stylesheet" href="../static/chat.css" />
-    <script src='../static/libs/jquery.js'></script>
-    <script src="../static/libs/socket.io.min.js"></script>
-
+    <style>
+        @font-face {
+            src: url('../static/libs/fonts/CurlzMT.ttf');
+            font-family: 'CurlzMT';
+        }
+        
+        body {
+            padding-left: 0
+        }
+        
+        #loader {
+            position: fixed;
+            text-align: center;
+            display: inline-block;
+            vertical-align: middle;
+            background: rgb(1, 0, 70);
+            color: green;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+        
+        #loader span {
+            z-index: 3;
+            display: inline-block;
+            vertical-align: middle;
+            font-family: 'jokerman arial', 'Curlz', 'CurlzMT', 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-size: 100px;
+            margin-top: 20%;
+        }
+    </style>
 </head>
 
-<body>
-    <header>{{session['room']}}</header>
+<body style="background: #191970">
 
-    <main>
+    <section id="loader"><span> Ming </span></section>
 
-    </main>
 
-    <footer>
-        <div>
-            <span id="emojis"><i class=""></i></span>
-            <textarea rows='1' placeholder="Type your message" id="text"></textarea>
-        </div>
-        <button id="send"><i class="fas fa-send-o"></i></button>
-    </footer>
+    <link rel="stylesheet" href="../static/libs/font-awesome.css" media="all" />
+    <link rel="stylesheet" href="../static/style.css?4568" />
+    <link rel="stylesheet" href="../static/modal.css">
 
-    <!-- 
-    <div hidden>
-        <input type="file" name="attch" id="file">
-    </div> -->
+    <script src="../static/libs/jquery.js"></script>
+    <script src="../static/libs/socket.io.min.js"></script>
+    <script src="../static/modal.js"></script>
 
     <script>
-        var socket = io.connect('{{protcl}}://' + document.domain + ':' + location.port + '/chat');
-        $('#text').focus();
-        !Function('localStorage.user="{{session["username"]}}"')();
+        $('#loader').fadeOut('slow'); // Fade the loader
     </script>
-    <script src="../static/chat.js"></script>
+
+    <header>
+        <img src="../static/bot.png" id="logo" style="border-radius: 50%" height="40px" width="40px" align="left" />
+        <div>{{session.get('room','Ming')}}</div>
+        <span id="plus" class="fa fa-plus" mod-html="$('#setting').html()"></span>
+    </header><br />
+
+
+    <main id="messages"><br><br id="base"><br><br></main>
+
+
+
+    <form>
+        <span id="arrows" class="fa fa-server"></span>
+        <div id="#attch" hidden>
+            <input id="img-att" type="file" accept="image/*" />
+        </div>
+        <textarea id="text" rows="1" placeholder="Type your message"></textarea>
+        <div id="emojis">
+
+            {% for n,name in emojis %}
+
+            <i class="em em-{{name}}"></i> {% endfor %}
+
+        </div>
+        <i id="emtrig" class="fa fa-smile"></i>
+        <span id="send" class="fa fa-send"></span>
+    </form>
+
+    <script>
+        $('#text').focus();
+
+        $('form').submit(e => e.preventDefault());
+        var socket = io.connect('{{protcl}}://' + document.domain + ':' + location.port + '/chat');
+
+        localStorage.user = "{{session.get('username')}}";
+        localStorage.room = "{{session.get('room')}}"
+
+        let sub = (q1, q2) => $(q1).height($(q1).height() - $(q2).height());
+        sub('main#messages', 'form');
+    </script>
+    <script src="../static/chat.js?9856"></script>
+
+
 </body>
 
 </html>

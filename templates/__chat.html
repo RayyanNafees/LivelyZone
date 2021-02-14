@@ -1,72 +1,38 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html>
 
 <head>
-    <title>LIVELYZONE</title>
-
     <meta charset="UTF-8">
-
-    <link rel="stylesheet" href="../static/libs/bootstrap/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="../static/style.css" />
-
-    <script src="../static/libs/jquery.js"></script>
-    <script src="../static/libs/socket.io.min.js"></script>
-
-    <script>
-        var socket;
-        $(function() {
-            socket = io.connect('https://' + document.domain + ':' + location.port + '/chat');
-            socket.on('connect', () => socket.emit('join', {}));
-
-            socket.on('status', function(data) {
-                $('#chat').val($('#chat').val() + '<' + data.msg + '>\n');
-                $('#chat').scrollTop($('#chat')[0].scrollHeight);
-            });
-
-            socket.on('message', function(data) {
-                $('#chat').val($('#chat').val() + data.msg + '\n');
-                $('#chat').scrollTop($('#chat')[0].scrollHeight);
-            });
-
-            function send(e) {
-                text = $('#text').val();
-                socket.emit('text', {
-                    msg: text
-                });
-                $('#text').val('');
-            }
-
-            $('#send').click(send);
-
-
-            function leave_room() {
-                socket.emit('left', {}, function() {
-                    socket.disconnect();
-                    // go back to the login page
-                    window.location.href = "{{ url_for('index') }}";
-                });
-            }
-        });
-    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LivelyZone Messenger</title>
+    <link rel="stylesheet" href="../static/chat.css" type="text/css" media="all" />
 </head>
 
-<body class="text-center">
-
-    <div class="chatwindow">
-        <h2>Code Cube Chat</h2>
-        <h2>Room : {{session['room']}}</h2><br>
-        <textarea id="chat" cols="70" rows="10" placeholder="No messages yet. Start one..."></textarea><br /><br />
-        <input type="text" id="text" size="60" placeholder="Enter your message here" />
-        <button type="button" id="send" class="btn btn-success">SEND</button><br /><br />
-        <center><button type="button" class="btn btn-danger" onclick=leave_room()>Leave this Chat</button></center>
+<body>
+    <div class="header">
+        <h3>exiticon</h3>
+        <h3>{{ ROOM NAME }}</h3>
     </div>
 
-    <script>
-        document.getElementById('text').onkeydown = function(e) {
-            if (e.which === 13)
-                send(e);
-        }
-    </script>
+
+    <div class="container">
+        <!--
+        #Messages & Notifications.
+        -->
+        <p class="sent">{{ message sent }}</p>
+        <p class="notify">{{ notification }}</p>
+        <p class="recieved">{{ message recieved }}</p>
+
+    </div>
+    <div class="">
+        <textarea class="footer" onkeyup="addRows('this.rows += 1');" rows="1" cols="40"></textarea>
+
+    </div>
+
+
+
+
+    <script src="../static/_chat.js"></script>
 </body>
 
 </html>

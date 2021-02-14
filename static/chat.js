@@ -1,32 +1,82 @@
-$(function() {
+//
 
-    let main = $('main');
-    let _main = document.getElementsByTagName('main');
+let count = (char, str) => [...str].filter(i => i == char).length;
+let mob = ('orientation' in window);
+let getcss = (query, style) => getComputedStyle(document.querySelector(query)).getPropertyValue(style);
 
-    let count = (char, str) => [...str].filter(i => i == char).length;
+let msgwin = $('#messages'); // get msg window
+let base = $('#base');
+let stat = 'Ming Chat';
 
-    socket.on('connect', () => socket.emit('join', {}));
+socket.on('connect', () => socket.emit('join', {}));
 
-    socket.on('status', function(data) {
-        main.append('<center><p class="status">' + data.msg + '</p></center><br>');
-        main.scrollTop(main[0].scrollHeight);
+socket.on('status', function(data) {
+    base.before('<center><p class="status">' + data.msg + '</p></center><br>');
+    msgwin.scrollTop(msgwin[0].scrollHeight);
+});
+
+
+socket.on('message', function(data) {
+
+    msg = data.msg.replace(/\n/g, '<br>')
+
+    if (data.user != localStorage.user) {
+        // main.append(`<br><p class="received"><span class="usr">${data.user}</span></br>${data.msg}</p><br>`);
+
+        botImg = $('#logo').clone(); // create <img>
+        botImg.addClass('botimg');
+
+        msgbox = $(`<p align="left" class="received"></p>`); // create the botbox
+
+        msgbox.prepend(botImg);
+        msgbox.append(msg);
+
+        if (document.hidden) {
+            stat = data.user + 'messaged';
+            new Notification(data.user, { body: data.msg, icon: botimg.attr('src') });
+        }
+    } else
+        msgbox = $('<p align="right" class="sent">' + msg + '</p>');
+
+
+    base.before(msgbox); // add it to msg element
+    msgwin.scrollTop(msgwin[0].scrollHeight * 2);
+
+    UI();
+});
+
+
+window.onbeforeunload = function leave_room() {
+    socket.emit('left', {}, function() {
+        socket.disconnect();
+        location.href = "/"; // redirect('/')
     });
+};
 
-    socket.on('message', function(data) {
 
-        if (data.user != localStorage.user)
-            main.append(`<br><p class = "received"><span class="usr">${data.user}</span></br>${data.msg}</p><br>`);
+document.onvisibilitychange = function() {
+    // To be editted as like fb (flickering document.title)
+};
 
+
+function UI() {
+    p = document.querySelectorAll('p.sent, p.received');
+    for (let _p of p) {
+
+        if (_p.class == 'sent')
+            _p.style.marginRight = (window.innerWidth - $(_p).width() - 20) + 'px';
         else
-            main.append('<br><p class = "sent">' + data.msg + '</p><br>');
+            _p.style.marginLeft = (window.innerWidth - $(_p).width() - 20) + 'px';
+    }
+}
 
-        main.scrollTop(main[0].scrollHeight);
+/*______________ jQuery methods ________*/
 
-    });
+$(function() {
 
     function send() {
         let txt = $('#text');
-        let text = txt.val();
+        let text = txt.val().trim();
 
         if (text) {
             socket.emit('text', { msg: text });
@@ -38,7 +88,8 @@ $(function() {
 
     $('#send').click(send);
 
-    $('#text').keydown(function(e) {
+    $('#text')
+        .keydown(function(e) {
 
             if (e.which == 13) {
 
@@ -56,20 +107,66 @@ $(function() {
                 this.value += '    ';
             }
 
-
-        })
-        .keyup(function(e) {
             if (e.which == 8 || e.which == 46) { // Backspace | Delete
                 let n = count('\n', this.value) + 1;
                 if (n < this.rows)
                     this.rows = String(n);
             }
-        });
 
-    window.onbeforeunload = function leave_room() {
-        socket.emit('left', {}, function() {
-            socket.disconnect();
-            window.location.href = "/"; // redirect('/')
-        });
-    };
+            if ([32, 9, 10, 13, 11, 12].includes(e.which)) { // on whitespace type
+                if (!$('#text').val()) // on empty textarea
+                    e.preventDefault();
+            }
+
+        })
+        .keyup(function(e) {});
+
+    $('#messages').height(window.innerHeight - $('footer').height());
+
+    if (mob) { $('body').css({ margin: 0, padding: 0 }) }
+
+    $('#plus').click(function() {
+
+        let txt = 'https://preming.herokuapp.com/enter/' + localStorage.room;
+
+        let copyText = $('<div hidden>' + txt + '</div>');
+
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+        /* Copy the text inside the text field */
+        document.execCommand("copy");
+
+        /* Alert the copied text */
+        alert("link Copied: " + copyText);
+    });
+
+    $('#arrows').click(function() {
+        let img = $('#img-att');
+        img.click();
+        if (img.val()) {
+            let form = new FormData();
+            form.append('attch', img[0].files[0]);
+            socket.emit('attach', { 'file': form }, () => alert('sent successfuly'));
+        }
+    });
+
 });
+
+
+/* Text Copy function */
+
+// function myFunction() {
+//     /* Get the text field */
+//     var copyText = document.getElementById("myInput");
+
+//     /* Select the text field */
+//     copyText.select();
+//     copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+//     /* Copy the text inside the text field */
+//     document.execCommand("copy");
+
+//     /* Alert the copied text */
+//     alert("Copied the text: " + copyText.value);
+// }
