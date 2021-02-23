@@ -147,6 +147,12 @@ textarea {
     color: #18bfe6;
 }
 
+#emojis {
+    font-size: 20px;
+    margin-left: -10%;
+    color: darkgrey;
+}
+
 #emojis:hover,
 #send:hover,
 #arrows:hover,
