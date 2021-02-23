@@ -100,7 +100,7 @@ $(function() {
 
     $('#messages').height(window.innerHeight - $('footer').height());
 
-    if (mob) { $('body').css({ margin: 0, padding: 0 }) }
+    if (mob) { $('body').css({ margin: 0, padding: 0 }); }
 
     $('#plus').click(function() {
 
