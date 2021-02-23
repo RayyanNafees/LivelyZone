@@ -1,13 +1,3 @@
-// DOM Selector Function.
-let DOM = el => document.querySelector(el);
-
-//VARIABLES.
-let dark_mode = localStorage.getItem("darkmode");
-let theme_toggler = DOM(".toggle-theme");
-
-
-//
-
 let count = (char, str) => [...str].filter(i => i == char).length;
 let mob = ('orientation' in window);
 let getcss = (query, style) => getComputedStyle(document.querySelector(query)).getPropertyValue(style);

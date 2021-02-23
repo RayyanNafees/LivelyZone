@@ -83,6 +83,7 @@ textarea {
     height: max-content;
     margin-bottom: 5px;
     resize: none;
+    background-color: rgb(230, 230, 230);
 }
 
 
@@ -103,8 +104,7 @@ textarea {
     text-align: center;
     word-break: break-word;
     overflow: hidden;
-    margin-top: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 3px;
     margin-right: 3px;
     margin-left: auto;
     padding: 10px;

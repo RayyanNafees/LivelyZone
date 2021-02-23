@@ -1,0 +1,230 @@
+<html>
+
+<head>
+    <title>Editor</title>
+
+    <style>
+        @font-face {
+            src: url('../static/libs/fonts/CurlzMT.ttf');
+            font-family: 'CurlzMT';
+        }
+        
+        body {
+            padding: 0;
+            margin: 0;
+            font-family: arial, sans-serif;
+            transition: 1s;
+        }
+        
+        #loader {
+            position: fixed;
+            text-align: center;
+            display: inline-block;
+            vertical-align: middle;
+            background: purple;
+            color: deepskyblue;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+        }
+        
+        #loader #content {
+            z-index: 3;
+            display: inline-block;
+            vertical-align: middle;
+            font-family: 'jokerman arial', 'Curlz', 'CurlzMT', 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            font-size: 100px;
+            margin-top: 20%;
+        }
+        
+        nav {
+            z-index: 4;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-blend-mode: overlay;
+            display: flex;
+            justify-content: space-evenly;
+            box-shadow: 0 3px 10px black;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        
+        .modal {
+            position: absolute;
+            /*Stay in place */
+            z-index: 10;
+            /* Sit on top */
+            padding-top: 100px;
+            /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: calc(100% - 100px);
+            /* Full height - padding-top */
+            background-color: rgba(0, 0, 0, 0.1);
+            /* Black w/ opacity */
+        }
+        /* Modal Box */
+        
+        .modal-box {
+            color: white;
+            margin: auto;
+            padding: 20px;
+            box-shadow: 0 0 10px 3px rgba(0, 0, 0, 0.4);
+            border-radius: 5px;
+            width: 80%;
+        }
+        /* The Close Button */
+        
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: lighter;
+            margin-top: -10px;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+
+    <script>
+        let Q = q => document.querySelector(q);
+        let _Q = q => [...document.querySelectorAll(q)];
+        let getcss = (query, value) => getComputedStyle(Q(query)).getPropertyValue(value);
+        let setcss = (query, cssObj) => _Q(query).map(i => Object.assign(i.style, cssObj));
+    </script>
+    <script src='../static/libs/jquery.js'></script>
+
+</head>
+
+<body>
+
+    <section id="loader">
+        <span id="content" contenteditable> Lively Zone </span>
+    </section>
+
+    <nav>
+        <div id='bg'>BG</div>
+        <div id='txt'>Text</div>
+        <div modal mod-html="Q('[hidden]').innerHTML">Font</div>
+        <div>Shadow</div>
+    </nav>
+
+    <div hidden>
+
+        <p> Red <input type="range" min="0" max="250" step="1" id="red" value="250" oninput="change()" /><span></span></p>
+        <p> Green <input type="range" min="0" max="250" step="1" id="green" value="250" oninput="change()" /><span></span></p>
+        <p> Blue <input type="range" min="0" max="250" step="1" id="blue" value="250" oninput="change()" /><span></span> </p>
+        <script>
+            function change() {
+                let r = $('#red').val();
+                let g = $('#green').val();
+                let b = $('#blue').val();
+                setcss('#loader', {background: `rgb(${r}, ${g}, ${b})`});
+                $('p').css('color', `rgb(${250-r}, ${250-g}, ${250-b})`);
+
+                for (let i of (['#red', '#green', '#blue']))
+                    $(i).siblings('span').text($(i).val());
+
+            }
+        </script>
+    </div>
+    
+</body>
+   
+<script>
+    Q('#bg').onclick = () => {
+
+        color = "#" + ((1 << 24) * Math.random() | 0).toString(16);
+
+        setcss('#loader', {
+            background: color
+        });
+
+        color = getcss('#loader', 'background-color');
+        _c = getcss('nav', 'color');
+
+        c_ = islight(color) && islight(_c) ? 'black' : 'white';
+        setcss('nav div', {
+            color: c_
+        });
+
+        Q('#txt').onclick = () => $('#content').css('color', "#" + ((1 << 24) * Math.random() | 0).toString(16));
+
+        Q('#loader').onclick = () => $('nav').slideToggle('fast');
+
+    };
+
+    function islight(color) {
+
+        if (color.match(/^rgb/)) {
+            color = color.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/);
+
+            [r, g, b] = color.slice(1, 4);
+        } else {
+            color = Number("0x" + color.slice(1).replace(color.length < 5 && /./g, '$&$&'));
+
+            [r, g, b] = [color >> 16, color >> 8 & 255, color & 255];
+        }
+
+
+        let hsp = Math.sqrt(
+            0.299 * r ** 2 +
+            0.587 * g ** 2 +
+            0.114 * b ** 2);
+
+        return (hsp > 127.5);
+    }
+
+    $('body').append(`
+        <!-- The Modal -->
+    
+        <div id="myModal" class="modal" hidden>
+
+            <!-- Modal content -->
+            <div class="modal-box">
+                <span class="close">&times;</span>
+                <div></div>
+            </div>
+        </div>
+        `);
+
+    var modal = $("#myModal"); // Get the modal
+    var content = $('.modal-box div'); // Get the modal box
+
+    function alter(val, alt = null) {
+        "To evaluate a function returning text/html in mod-(text/html)"
+        try {
+            return eval(val)
+        } catch {
+            return !alt ? val : alt
+        }
+    }
+
+    // When the user clicks the button, open the modal 
+    $('[modal]').click(function() {
+        content.children().remove(); // empty the content
+        content.text(alter($(this).attr('mod-text'))); // add text if 'mod-text'
+        content.html(alter($(this).attr('mod-html'))); // add html if 'mod-html'
+        modal.fadeIn(150); // make it appear with a fading effect
+    });
+
+    // When the user clicks on <span> (x), close the modal
+    $('.close').click(() => {
+        modal.fadeOut(100);
+        content.children().remove()
+    });
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = e => e.target == document.getElementById('myModal') ? modal.fadeOut(100) : null;
+</script>
+
+</html>
