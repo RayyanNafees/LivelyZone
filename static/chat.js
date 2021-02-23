@@ -9,7 +9,7 @@ let stat = 'Lively Zone Chat';
 socket.on('connect', () => socket.emit('join', {}));
 
 socket.on('status', function(data) {
-    msgwin.append('<p class="status">' + data.msg + '</p>');
+    base.before('<p class="status">' + data.msg + '</p>');
     msgwin.scrollTop(msgwin[0].scrollHeight);
 });
 
@@ -29,8 +29,8 @@ socket.on('message', function(data) {
         msgbox = $(`<p class="sent">${msg}</p>`);
 
 
-    msgwin.append(msgbox); // add it to msg element
-    msgwin.scrollTop(msgwin[0].scrollHeight * 2);
+    base.before(msgbox); // add it to msg element
+    msgwin.scrollTop(msgwin[0].scrollHeight);
 });
 
 

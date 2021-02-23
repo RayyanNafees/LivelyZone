@@ -64,14 +64,14 @@ footer {
     bottom: 0;
     left: 0;
     width: 100vw;
-    height: 40px;
+    height: max-content;
     z-index: 2;
     background: var(--subbg);
     box-shadow: 0px 4px 24px var(--bgcol);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 0px;
 }
 
 textarea {
@@ -79,7 +79,7 @@ textarea {
     outline: 0;
     border: none;
     border-radius: 20px;
-    width: 70%;
+    width: 65%;
     height: max-content;
     margin-bottom: 5px;
     resize: none;
@@ -138,11 +138,9 @@ textarea {
 
 /* Icon/buttons */
 
-#emojis,
-#send,
-#arrows,
+footer span,
 #plus {
-    font-size: 32px;
+    font-size: 20px;
     margin: 5px;
     color: #18bfe6;
 }
@@ -153,9 +151,11 @@ textarea {
     color: darkgrey;
 }
 
-#emojis:hover,
-#send:hover,
-#arrows:hover,
+#send {
+    font-size: 25px;
+}
+
+footer span:hover,
 #plus:hover {
     color: #0E75E6;
 }

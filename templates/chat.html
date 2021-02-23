@@ -47,7 +47,7 @@
 
 
     <link rel="stylesheet" href="../static/libs/font-awesome.css" media="all" />
-    <link rel="stylesheet" href="../static/chat.css?69r" />
+    <link rel="stylesheet" href="../static/chat.css?twalleoo" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/RayyanNafees/FA5PRO/css/all.min.css">
 
     <!-- <link rel="stylesheet" href="../static/modal.css"> -->
@@ -59,7 +59,7 @@
 
     <script>
         $('#loader').fadeOut('slow'); // Fade the loader
-        document.body.requestFullscreen();
+        $('footer span').on('load', () => document.body.requestFullscreen);
     </script>
 
     <!-- Loadend -->
@@ -71,10 +71,12 @@
     </header>
 
 
-    <main id="messages"></main>
+    <main id="messages"><br id="base" /><br/> </main>
 
     <footer>
-        <span id="arrows" class="fa fa-server"></span>
+        <span id="attch" class="fal fa-paperclip"></span>
+        <span id="img" class="fas fa-image"></span>
+        <span id="mic" class="fas fa-microphone"></span>
         <textarea id="text" rows="1" placeholder="Type a message"></textarea>
         <span id="emojis" class='fal fa-smile'></span>
         <span id="send" class="fa fa-send"></span>
