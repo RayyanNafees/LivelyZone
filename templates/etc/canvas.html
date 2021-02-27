@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Canvas</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <style>
+        body {
+            background: white;
+            color: black;
+            position: fixed;
+            left: 0;
+            top: 0;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        div {
+            border: 2px solid black;
+            position: fixed;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1></h1>
+</body>
+
+<script>
+    const W = window;
+    const B = document.body;
+    let D;
+    let p = document.getElementsByTagName('h1')[0];
+
+    let coords = [];
+    W.onclick = e => {
+        let [x, y] = [e.pageX, e.pageY];
+        clicked = true
+        coords.concat([x, y]);
+        B.innerHTML += `<div style="top:${y}px; left:${x}px"></div>`
+        D = document.getElementsByTagName('div');
+        D = D[D.length - 1];
+
+    };
+    W.onmousemove = e => {
+
+        let [X, Y] = [
+            coords[coords.length - 2],
+            coords[coords.length - 1]
+        ];
+        let [x, y] = [e.pageX, e.pageY];
+        p.innerText = `(${x},${y})`;
+        D = document.getElementsByTagName('div');
+        D = D[D.length - 1];
+
+        D.style.height = Math.abs(Y - y);
+        D.style.width = Math.abs(X - x);
+
+    };
+    W.onmouseup = () => clicked = false;
+</script>
+
+</html>

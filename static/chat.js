@@ -1,10 +1,10 @@
-let count = (char, str) => [...str].filter(i => i == char).length;
-let mob = ('orientation' in window);
-let getcss = (query, style) => getComputedStyle(document.querySelector(query)).getPropertyValue(style);
+// var count = (char, str) => [...str].filter(i => i == char).length;
+// var mob = ('orientation' in window);
+// var getcss = (query, style) => getComputedStyle(document.querySelector(query)).getPropertyValue(style);
 
-let msgwin = $('#messages'); // get msg window
-let base = $('#base');
-let stat = 'Lively Zone Chat';
+// var msgwin = $('#messages'); // get msg window
+// var base = $('#base');
+
 
 socket.on('connect', () => socket.emit('join', {}));
 

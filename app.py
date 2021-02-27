@@ -3,32 +3,41 @@ from flask_socketio import SocketIO, join_room, leave_room, emit
 
 app = Flask(__name__)
 
-app.debug = True
 app.secret_key = 'secret'
 
 local = (__name__ == '__main__')
 
 socket = SocketIO(app, manage_session=False)
 
-
 @app.route('/')
-def index():
-    return render_template('index.html')
+def index(): return render_template( 'index.html')
 
+@app.route('/logo')
+def logo(): return render_template( 'etc/edit.html')
 
-@app.route('/temp')
+@app.route('/mirror')
+def mirror(): return render_template( 'etc/mirror.html')
+
+@app.route('/repeat')
+def repeater(): return render_template('etc/repeat.html')
+
+@app.route('/draw')
+def canvas(): return render_template('etc/canvas.html')
+    
+
+@app.route('/emojis')
 def bar():
     lis = open('static/emojis.txt').readlines()
     return render_template('setting.html', session=session, emojis_names = lis)
 
 
 @app.route('/enter/<room>')
-def foo(room):   
+def enter(room):   
     return render_template('enter.html', room=room)
 
 
 @app.route('/add')  # add?user=Rayyan&room=Room
-def enter():
+def add():
     room = request.args.get('room','Lively Zone')
     user = request.args.get('user','Someone')
     return redirect(f'/join/{user}/{room}')
@@ -77,6 +86,11 @@ def text(message):
 def inform(data): 
     room = session.get('room')   
     emit('message', {'msg':str(data),'user':session.get('username') }, room=room)
+
+
+@socket.on('imgsent', namespace='/chat')
+def imgsent(data):
+    emit('imgrec', data, room=session.get('room'))
 
 @socket.on('left', namespace='/chat')
 def left(message):

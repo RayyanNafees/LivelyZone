@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Mirror</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            background: darkgrey;
+        }
+        
+        audio {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <audio controls preload="auto">Enable a microphone to play</audio>
+</body>
+<script>
+    let config = {
+        audio: true
+    };
+
+    navigator.mediaDevices.getUserMedia(config)
+        .then(stream => {
+            vid = document.getElementsByTagName('audio')[0];
+            vid.srcObject = stream;
+        })
+        .catch(alert);
+</script>
+
+</html>

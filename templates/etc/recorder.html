@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Recorder</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <style>
+        header {
+            height: 70px;
+        }
+        
+        .main-controls {
+            padding-bottom: 0.7rem;
+            height: 170px;
+        }
+        
+        .sound-clips {
+            box-shadow: inset 0 3px 4px rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.1);
+            height: calc(100% - 240px - 0.7rem);
+            overflow: scroll;
+        }
+        
+        label {
+            font-family: 'NotoColorEmoji';
+            font-size: 3rem;
+            position: absolute;
+            top: 2px;
+            right: 3px;
+            z-index: 5;
+            cursor: pointer;
+        }
+        
+        input[type=checkbox] {
+            position: absolute;
+            top: -100px;
+        }
+        
+        aside {
+            position: fixed;
+            top: 0;
+            left: 0;
+            text-shadow: 1px 1px 1px black;
+            width: 100%;
+            height: 100%;
+            transform: translateX(100%);
+            transition: 0.6s all;
+            background-color: #999;
+            background-image: linear-gradient(to top right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.5));
+        }
+        
+        input[type=checkbox]:checked~aside {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+
+<body>
+    <article class="clip">
+        <audio controls autoplay></audio>
+        <p>My Clip</p>
+        <button>Delete</button>
+    </article>
+</body>
+<script>
+    const record = document.querySelector('.record');
+    const stop = document.querySelector('.stop');
+    const soundClips = document.querySelector('.sound-clips');
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        console.log('getUserMedia supported.');
+        navigator.mediaDevices.getUserMedia(
+            // constraints - only audio needed for this app
+            {
+                audio: true
+            })
+
+        // Success callback
+        .then(function(stream) {
+
+        })
+
+        // Error callback
+        .catch(function(err) {
+            console.log('The following getUserMedia error occurred: ' + err);
+        });
+    } else {
+        console.log('getUserMedia not supported on your browser!');
+    }
+    const mediaRecorder = new MediaRecorder(stream);
+    record.onclick = function() {
+        mediaRecorder.start();
+        console.log(mediaRecorder.state);
+        console.log("recorder started");
+        record.style.background = "red";
+        record.style.color = "black";
+    }
+    let chunks = [];
+
+    mediaRecorder.ondataavailable = function(e) {
+        chunks.push(e.data);
+    }
+    stop.onclick = function() {
+        mediaRecorder.stop();
+        console.log(mediaRecorder.state);
+        console.log("recorder stopped");
+        record.style.background = "";
+        record.style.color = "";
+    }
+    mediaRecorder.onstop = function(e) {
+        console.log("recorder stopped");
+
+        const clipName = prompt('Enter a name for your sound clip');
+
+        const clipContainer = document.createElement('article');
+        const clipLabel = document.createElement('p');
+        const audio = document.createElement('audio');
+        const deleteButton = document.createElement('button');
+
+        clipContainer.classList.add('clip');
+        audio.setAttribute('controls', '');
+        deleteButton.innerHTML = "Delete";
+        clipLabel.innerHTML = clipName;
+
+        clipContainer.appendChild(audio);
+        clipContainer.appendChild(clipLabel);
+        clipContainer.appendChild(deleteButton);
+        soundClips.appendChild(clipContainer);
+
+        const blob = new Blob(chunks, {
+            'type': 'audio/ogg; codecs=opus'
+        });
+        chunks = [];
+        const audioURL = window.URL.createObjectURL(blob);
+        audio.src = audioURL;
+
+        deleteButton.onclick = function(e) {
+            let evtTgt = e.target;
+            evtTgt.parentNode.parentNode.removeChild(evtTgt.parentNode);
+        }
+    }
+</script>
+
+</html>

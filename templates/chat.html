@@ -59,7 +59,7 @@
 
     <script>
         $('#loader').fadeOut('slow'); // Fade the loader
-        $('footer span').on('load', () => document.body.requestFullscreen);
+        $('footer span').on('load', () => document.body.requestFullscreen());
     </script>
 
     <!-- Loadend -->
@@ -89,8 +89,17 @@
 
         localStorage.user = "{{session.get('username')}}";
         localStorage.room = "{{session.get('room')}}";
+
+        var count = (char, str) => [...str].filter(i => i == char).length;
+        var mob = ('orientation' in window);
+        var getcss = (query, style) => getComputedStyle(document.querySelector(query)).getPropertyValue(style);
+
+        var msgwin = $('#messages'); // get msg window
+        var base = $('#base');
     </script>
+
     <script src="../static/chat.js"></script>
+    <script src="../static/mime.js"></script>
 
 </body>
 

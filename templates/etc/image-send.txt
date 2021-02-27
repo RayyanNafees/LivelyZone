@@ -1,0 +1,81 @@
+<body>
+  <input type="file" id="files" accept="image/*" />
+  <script>
+      document.getElementById('files').addEventListener('change', handleFileSelect, false);
+  </script>
+</body>
+
+
+@socketio.on('image-upload')
+def imageUpload(image):
+    emit('send-image', image, broadcast = True)
+
+
+function handleFileSelect(ele){
+    var file = ele.target.files[0];
+    var fileReader = new FileReader();
+    fileReader.readAsDataURL(file)
+    fileReader.onload = () => {
+        var arrayBuffer = fileReader.result; 
+        socketControl.uploadImage({ 
+            name: file.name, 
+            type: file.type, 
+            size: file.size, 
+            binary: arrayBuffer 
+         });
+     }
+}
+
+
+function handleFileSelect(ele){
+    var file = ele.target.files[0];
+    var fileReader = new FileReader();
+    fileReader.readAsArrayBuffer(file); 
+    fileReader.onload = () => {
+        var arrayBuffer = fileReader.result; 
+        socketControl.uploadImage({ 
+            name: file.name, 
+            type: file.type, 
+            size: file.size, 
+            binary: arrayBuffer 
+         });
+     }
+}
+
+<body>
+    <div id="message-container"></div>
+    <script>
+        socket.on("send-image", function(data){
+            appendImageMessage(data)
+        })
+    </script>
+</body>
+
+
+function appendImageMessage(data) {
+    var messageContainer = document.getElementById('message-container');
+    messageContainer.appendChild(createImageMessageDOM(data))
+}
+
+function createImageMessageDOM(data) {
+    var img = document.createElement("img");
+    img.src = data.binary;
+    img.style.width = '100%';
+}
+
+
+
+function appendImageMessage(data) {
+    var messageContainer = document.getElementById('message-container');
+    messageContainer.appendChild(createImageMessageDOM(data))
+}
+
+function createImageMessageDOM(data) {
+    var img = document.createElement("img");
+    var str = String.fromCharCode.apply(null, new Uint8Array(data.binary));
+    img.src = 'data:image/jpg;base64,' + btoa(str);    
+    img.style.width = '100%';
+}
+
+
+
