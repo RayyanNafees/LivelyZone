@@ -25,22 +25,22 @@
 </head>
 
 <body>
-    <video autoplay muted capture>Enable Camera to play</video>
-</body>
-<script>
-    let config = {
-        audio: false,
-        video: {
-            facingMode: "user"
-        }
-    }
 
-    navigator.mediaDevices.getUserMedia(config).then(stream => {
-        vid = document.getElementsByTagName('video')[0];
-        vid.srcObject = stream;
-    }).catch(e => {
-        alert(e);
-    })
-</script>
+    <video autoplay muted capture>Enable Camera to play</video>
+
+    <script>
+        let config = {
+            audio: false,
+            video: {
+                facingMode: "user"
+            }
+        };
+
+        navigator.mediaDevices.getUserMedia(config).then(stream => {
+            vid = document.getElementsByTagName('video')[0];
+            vid.srcObject = stream;
+        }).catch(alert);
+    </script>
+</body>
 
 </html>

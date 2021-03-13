@@ -1,10 +1,4 @@
-// var count = (char, str) => [...str].filter(i => i == char).length;
-// var mob = ('orientation' in window);
-// var getcss = (query, style) => getComputedStyle(document.querySelector(query)).getPropertyValue(style);
-
-// var msgwin = $('#messages'); // get msg window
-// var base = $('#base');
-
+//
 
 socket.on('connect', () => socket.emit('join', {}));
 

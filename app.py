@@ -89,8 +89,17 @@ def inform(data):
 
 
 @socket.on('imgsent', namespace='/chat')
-def imgsent(data):
-    emit('imgrec', data, room=session.get('room'))
+def imgsend(data): emit('imgrec', {'user':session.get('username'), **data}, room=session.get('room'))
+
+@socket.on('audsent', namespace='/chat')
+def audsend(data): emit('audrec',{'user':session.get('username'), **data}, room=session.get('room'))
+
+@socket.on('vidsent', namespace='/chat')
+def vidsend(data): emit('vidrec', {'user':session.get('username'), **data}, room=session.get('room'))
+
+@socket.on('filesent', namespace='/chat')
+def filesend(data): emit('filerec',{'user':session.get('username'), **data}, room=session.get('room'))
+
 
 @socket.on('left', namespace='/chat')
 def left(message):
