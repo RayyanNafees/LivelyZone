@@ -142,16 +142,14 @@ def left(message):
 @app.route('/try')
 def testDB():
     try:
-        from mysql.connector import connect
+        (from mysql.connector import connect) if local else (from psycopg2 import connect)
         conn = connect(**app.config['dbconfig'])
         cursor = conn.cursor()
         return str(dir(cursor))
     except Exception as err:
         return str(err)
 
-    
 
-    
 
 if __name__=='__main__':
     socket.run(app, debug=True, port=9999)
