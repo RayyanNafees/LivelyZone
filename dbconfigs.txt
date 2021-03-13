@@ -1,0 +1,7 @@
+{host: ec2-54-89-49-242.compute-1.amazonaws.com,
+database: dlt0i4hb9qsd3,
+user: igsjyhwpkbtug,
+port: 543,
+password: a44d44dd90bb4b93b13704dc8a70c5448d2e877e2b532835c50fb445262ee0dd,
+# URI: postgres://igsjyhwpkbtugl:a44d44dd90bb4b93b13704dc8a70c5448d2e877e2b532835c50fb445262ee0dd@ec2-54-89-49-242.compute-1.amazonaws.com:5432/dlt0i4hb9qsd3
+}

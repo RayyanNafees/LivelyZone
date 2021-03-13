@@ -4,10 +4,39 @@ from flask_socketio import SocketIO, join_room, leave_room, emit
 app = Flask(__name__)
 
 app.secret_key = 'secret'
+    
+socket = SocketIO(app, manage_session=False)
 
 local = (__name__ == '__main__')
+dbserver = 'heroku' # afolabiD, livelyzone, lively
 
-socket = SocketIO(app, manage_session=False)
+if local: 
+    app.config['dbconfig'] = dict(host='127.0.0.1',
+                                  port='5000',
+                                  database='livelyzone',
+                                  password='Manofaction.1',
+                                  user="livelyzone")
+elif dbserver=='heroku':
+    host= 'ec2-54-89-49-242.compute-1.amazonaws.com'
+    database= 'dlt0i4hb9qsd3'
+    user= 'igsjyhwpkbtug'
+    port= '543'
+    password= 'a44d44dd90bb4b93b13704dc8a70c5448d2e877e2b532835c50fb445262ee0dd'
+    URI = f'postgres://{user}:{password}@{host}:{port}/{database}'
+    
+    app.config['dbconfig'] = dict(user=user,
+                                  password=password,
+                                  port=port,
+                                  database=database,
+                                  host=host,
+                                  # URI = URI
+                                  )
+else:
+    app.config['dbconfig'] = dict(user= dbserver,
+                                  host= dbserver+'.mysql.pythonanywhere-services.com',
+                                  password= 'Manofaction.1',
+                                  database= dbserver+'$default')
+
 
 @app.route('/')
 def index(): return render_template( 'index.html')
@@ -110,7 +139,19 @@ def left(message):
     session.clear()
     emit('status', {'msg': username + ' left.'}, room=room)
 
+@app.route('/try')
+def testDB():
+    try:
+        from mysql.connector import connect
+        conn = connect(**app.config['dbconfig'])
+        cursor = conn.cursor()
+        return str(dir(cursor))
+    except Exception as err:
+        return str(err)
 
+    
+
+    
 
 if __name__=='__main__':
     socket.run(app, debug=True, port=9999)
